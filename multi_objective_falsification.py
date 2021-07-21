@@ -72,7 +72,7 @@ def run_experiments(path, parallel=False, model=None,
         try:
             falsifier = run_experiment(p, parallel=parallel, 
             model=model, sampler_type=sampler_type, headless=headless,
-            num_workers=num_workers, map_path=map_path)
+            num_workers=num_workers)
         except:
             announce(f'ERROR FOR SCRIPT {p}:\n\n{traceback.format_exc()}')
             continue
@@ -156,11 +156,10 @@ if __name__ == '__main__':
     help='verifaiSamplerType to use')
     parser.add_argument('--experiment-name', '-e', type=str, default=None,
     help='verifaiSamplerType to use')
-    parser.add_argument('--multi-objective', action='store_true')
     parser.add_argument('--model', '-m', type=str, default=None)
     parser.add_argument('--headless', action='store_true')
     parser.add_argument('--lgsvl', '-l', action='store_true')
     args = parser.parse_args()
-    run_experiments(args.path, args.parallel, args.multi_objective,
+    run_experiments(args.path, args.parallel,
     model=args.model, sampler_type=args.sampler_type, headless=args.headless,
     num_workers=args.num_workers, experiment_name=args.experiment_name, lgsvl=args.lgsvl)
