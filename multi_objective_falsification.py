@@ -34,27 +34,6 @@ def announce(message):
     print(m)
     print(border)
 
-"""
-Example of multi-objective specification. This monitor specifies that the ego vehicle
-must stay at least 5 meters away from each other vehicle in the scenario.
-"""
-class distance_multi(multi_objective_monitor):
-    def __init__(self, num_objectives=1):
-        priority_graph = nx.DiGraph()
-        self.num_objectives = num_objectives
-        priority_graph.add_edge(0, 2)
-        priority_graph.add_edge(1, 3)
-        priority_graph.add_edge(2, 4)
-        priority_graph.add_edge(3, 4)
-        print(f'Initialized priority graph with {self.num_objectives} objectives')
-        def specification(simulation):
-            positions = np.array(simulation.result.trajectory)
-            distances = positions[:, [0], :] - positions[:, 1:, :]
-            distances = np.linalg.norm(distances, axis=2)
-            rho = np.min(distances, axis=0) - 5
-            return rho
-        
-        super().__init__(specification, priority_graph)
 
 """
 Single-objective specification. This monitor is similar to the one above, but takes a
@@ -75,7 +54,7 @@ class distance(specification_monitor):
 """
 Runs all experiments in a directory.
 """
-def run_experiments(path, parallel=False, multi_objective=False, model=None,
+def run_experiments(path, parallel=False, model=None,
                    sampler_type=None, headless=False, num_workers=5, output_dir='outputs',
                    experiment_name=None, map_path=None, lgsvl=False):
     if not os.path.exists(output_dir):
@@ -91,7 +70,7 @@ def run_experiments(path, parallel=False, multi_objective=False, model=None,
         paths = [path]
     for p in paths:
         try:
-            falsifier = run_experiment(p, parallel=parallel, multi_objective=multi_objective,
+            falsifier = run_experiment(p, parallel=parallel, 
             model=model, sampler_type=sampler_type, headless=headless,
             num_workers=num_workers, map_path=map_path)
         except:
@@ -136,8 +115,6 @@ def run_experiment(path, parallel=False, model=None,
     if model:
         params['model'] = model
     sampler = ScenicSampler.fromScenario(path, **params)
-    num_objectives = sampler.scenario.params.get('N', 1)
-    multi = num_objectives > 1
     falsifier_params = DotMap(
         n_iters=None,
         save_error_table=True,
@@ -145,7 +122,7 @@ def run_experiment(path, parallel=False, model=None,
         max_time=1800,
     )
     server_options = DotMap(maxSteps=300, verbosity=0)
-    monitor = distance() if not multi else distance_multi(num_objectives)
+    monitor = distance()
 
     falsifier_cls = generic_parallel_falsifier if parallel else generic_falsifier
     
