@@ -20,9 +20,11 @@ from verifai.falsifier import generic_falsifier
 import networkx as nx
 import pandas as pd
 
+
 def announce(message):
     lines = message.split('\n')
     size = max([len(p) for p in lines]) + 4
+
     def pad(line):
         ret = '* ' + line
         ret += ' ' * (size - len(ret) - 1) + '*'
@@ -40,6 +42,8 @@ Single-objective specification. This monitor is similar to the one above, but ta
 minimum over the distances from each vehicle. If the ego vehicle is less than 5 meters
 away from any vehicle at any point, a counterexample is returned.
 """
+
+
 class distance(specification_monitor):
     def __init__(self):
         def specification(simulation):
@@ -48,15 +52,18 @@ class distance(specification_monitor):
             distances = np.linalg.norm(distances, axis=2)
             rho = np.min(distances) - 5
             return rho
-        
+
         super().__init__(specification)
+
 
 """
 Runs all experiments in a directory.
 """
+
+
 def run_experiments(path, parallel=False, model=None,
-                   sampler_type=None, headless=False, num_workers=5, output_dir='outputs',
-                   experiment_name=None, map_path=None, lgsvl=False):
+                    sampler_type=None, headless=False, num_workers=5, output_dir='outputs',
+                    experiment_name=None, map_path=None, lgsvl=False):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
     paths = []
@@ -70,13 +77,14 @@ def run_experiments(path, parallel=False, model=None,
         paths = [path]
     for p in paths:
         try:
-            falsifier = run_experiment(p, parallel=parallel, 
-            model=model, sampler_type=sampler_type, headless=headless,
-            num_workers=num_workers)
+            falsifier = run_experiment(p, parallel=parallel,
+                                       model=model, sampler_type=sampler_type, headless=headless,
+                                       num_workers=num_workers)
         except:
             announce(f'ERROR FOR SCRIPT {p}:\n\n{traceback.format_exc()}')
             continue
-        df = pd.concat([falsifier.error_table.table, falsifier.safe_table.table])
+        df = pd.concat([falsifier.error_table.table,
+                        falsifier.safe_table.table])
         if experiment_name is not None:
             outfile = experiment_name
         else:
@@ -84,8 +92,6 @@ def run_experiments(path, parallel=False, model=None,
             outfile = root.split('/')[-1]
             if parallel:
                 outfile += '_parallel'
-            if multi_objective:
-                outfile += '_multi'
             if model:
                 outfile += f'_{model}'
             if sampler_type:
@@ -94,6 +100,7 @@ def run_experiments(path, parallel=False, model=None,
         outpath = os.path.join(output_dir, outfile)
         announce(f'SAVING OUTPUT TO {outpath}')
         df.to_csv(outpath)
+
 
 """
 Runs a single falsification experiment.
@@ -106,6 +113,8 @@ Arguments:
     headless: Whether or not to display each simulation.
     num_workers: Number of parallel workers. Only used if parallel is true.
 """
+
+
 def run_experiment(path, parallel=False, model=None,
                    sampler_type=None, headless=False, num_workers=5):
     announce(f'RUNNING SCENIC SCRIPT {path}')
@@ -125,41 +134,43 @@ def run_experiment(path, parallel=False, model=None,
     monitor = distance()
 
     falsifier_cls = generic_parallel_falsifier if parallel else generic_falsifier
-    
+
     falsifier = falsifier_cls(sampler=sampler, falsifier_params=falsifier_params,
-                                  server_class=ScenicServer,
-                                  server_options=server_options,
-                                  monitor=monitor, scenic_path=path,
-                                  scenario_params=params, num_workers=num_workers)
+                              server_class=ScenicServer,
+                              server_options=server_options,
+                              monitor=monitor, scenic_path=path,
+                              scenario_params=params, num_workers=num_workers)
     t0 = time.time()
     print('Running falsifier')
     falsifier.run_falsifier()
     t = time.time() - t0
     print()
-    print(f'Generated {len(falsifier.samples)} samples in {t} seconds with {falsifier.num_workers} workers')
+    print(
+        f'Generated {len(falsifier.samples)} samples in {t} seconds with {falsifier.num_workers} workers')
     print(f'Number of counterexamples: {len(falsifier.error_table.table)}')
     if not parallel:
         print(f'Sampling time: {falsifier.total_sample_time}')
         print(f'Simulation time: {falsifier.total_simulate_time}')
     print(f'Confidence interval: {falsifier.get_confidence_interval()}')
-    if multi:
-        print(f'Counterexamples found: {falsifier.server.sampler.scenario.externalSampler.sampler.domainSampler.split_sampler.samplers[0].counterexamples.keys()}')
+
     return falsifier
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', '-p', type=str, default='uberCrashNewton.scenic',
-    help='Path to Scenic script')
+                        help='Path to Scenic script')
     parser.add_argument('--parallel', action='store_true')
-    parser.add_argument('--num-workers', type=int, default=5, help='Number of parallel workers')
+    parser.add_argument('--num-workers', type=int, default=5,
+                        help='Number of parallel workers')
     parser.add_argument('--sampler-type', '-s', type=str, default=None,
-    help='verifaiSamplerType to use')
+                        help='verifaiSamplerType to use')
     parser.add_argument('--experiment-name', '-e', type=str, default=None,
-    help='verifaiSamplerType to use')
+                        help='verifaiSamplerType to use')
     parser.add_argument('--model', '-m', type=str, default=None)
     parser.add_argument('--headless', action='store_true')
     parser.add_argument('--lgsvl', '-l', action='store_true')
     args = parser.parse_args()
     run_experiments(args.path, args.parallel,
-    model=args.model, sampler_type=args.sampler_type, headless=args.headless,
-    num_workers=args.num_workers, experiment_name=args.experiment_name, lgsvl=args.lgsvl)
+                    model=args.model, sampler_type=args.sampler_type, headless=args.headless,
+                    num_workers=args.num_workers, experiment_name=args.experiment_name, lgsvl=args.lgsvl)
