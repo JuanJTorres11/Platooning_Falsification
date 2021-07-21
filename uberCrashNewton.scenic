@@ -49,11 +49,13 @@ crossing_car = Car at crossingSpawnPoint,
                 
                 
 #### PLATOON 
+# Parameters of the scenario.
+param MIDDLE_CAR2_SPEED = VerifaiRange(10, 20)
+param MC2_BRAKING_THRESHOLD = VerifaiRange(10, 15)
 
 #CONSTANTS
 EGO_SPEED = 10
 MIDDLE_CAR3_SPEED = 10
-MIDDLE_CAR2_SPEED = 10
 LEAD_CAR_SPEED = 10
 
 BRAKE_ACTION = 1.0
@@ -63,10 +65,8 @@ MC2_TO_LEADCAR = -20
 MC3_TO_MC2 = -20
 EGO_TO_MC3 = -20
 
-
 EGO_BRAKING_THRESHOLD = 15
 MC3_BRAKING_THRESHOLD = 15
-MC2_BRAKING_THRESHOLD = 15
 LEADCAR_BRAKING_THRESHOLD = 15
 
 ## DEFINING BEHAVIORS
@@ -94,7 +94,7 @@ behavior Car2Behavior(speed=10):
 	try:
 		do FollowLaneBehavior(speed)
 
-	interrupt when withinDistanceToAnyCars(self, MC2_BRAKING_THRESHOLD):
+	interrupt when withinDistanceToAnyCars(self, globalParameters.MC2_BRAKING_THRESHOLD):
 		take SetBrakeAction(BRAKE_ACTION)
 
 #CAR3 BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
@@ -118,7 +118,7 @@ lane = Uniform(*network.lanes)
 leadCar = Car with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
 
 c2 = Car following roadDirection from leadCar for MC2_TO_LEADCAR,
-	with behavior EgoBehavior(MIDDLE_CAR2_SPEED)
+	with behavior EgoBehavior(globalParameters.MIDDLE_CAR2_SPEED)
 
 c3 = Car following roadDirection from c2 for MC3_TO_MC2,
 		with behavior EgoBehavior(MIDDLE_CAR3_SPEED)
