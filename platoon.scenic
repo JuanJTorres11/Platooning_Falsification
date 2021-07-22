@@ -1,10 +1,11 @@
 #SET MAP AND MODEL (i.e. definitions of all referenceable vehicle types, road library, etc)
-param map = localPath('Town01.xodr') 
+param map  = localPath('../../tests/CubeTown.xodr')
+param lgsvl_map = 'CubeTown'
+param time_step = 1.0/10
+model scenic.simulators.lgsvl.model
 param render = True
-model scenic.simulators.newtonian.model #located in scenic/simulators/carla/model.scenic
 param verifaiSamplerType = 'ce'
 
-#### PLATOON 
 # Parameters of the scenario.
 param MIDDLE_CAR2_SPEED = VerifaiRange(10, 20)
 param MC2_BRAKING_THRESHOLD = VerifaiRange(10, 15)
@@ -71,14 +72,14 @@ lane = Uniform(*network.lanes)
 
 ##OBJECT PLACEMENT
 
-leadCar = Car with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
+leadCar = Car on lane,
+    with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
 
 c2 = Car following roadDirection from leadCar for MC2_TO_LEADCAR,
-	with behavior EgoBehavior(globalParameters.MIDDLE_CAR2_SPEED)
+	with behavior Car2Behavior(globalParameters.MIDDLE_CAR2_SPEED)
 
 c3 = Car following roadDirection from c2 for MC3_TO_MC2,
-		with behavior EgoBehavior(MIDDLE_CAR3_SPEED)
+	with behavior Car3Behavior(MIDDLE_CAR3_SPEED)
 
 ego = Car following roadDirection from c3 for EGO_TO_MC3,
 	with behavior EgoBehavior(EGO_SPEED)
-                
