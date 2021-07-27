@@ -1,6 +1,6 @@
 #SET MAP AND MODEL (i.e. definitions of all referenceable vehicle types, road library, etc)
-param map  = localPath('../../tests/singlelineroad.xodr')
-param lgsvl_map = 'SingleLineRoad'
+param map  = localPath('../../tests/singlelaneroad.xodr')
+param lgsvl_map = 'SingleLaneRoad'
 param time_step = 1.0/10
 model scenic.simulators.lgsvl.model
 param render = True
@@ -21,7 +21,7 @@ THROTTLE_ACTION = 0.6
 
 
 EGO_TO_LEADCAR = -20
-C3_TO_C2 = -20
+C3_TO_EGO = -20
 C4_TO_C3 = -20
 
 C3_BRAKING_THRESHOLD = 15
