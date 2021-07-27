@@ -11,7 +11,7 @@ param EGO_SPEED = VerifaiRange(10, 20)
 param EGO_BRAKING_THRESHOLD = VerifaiRange(10, 15)
 
 #CONSTANTS
-TERMINATE_TIME = 40 / globalParameters.time_step
+TERMINATE_TIME = 20 / globalParameters.time_step
 CAR3_SPEED = 10
 CAR4_SPEED = 10
 LEAD_CAR_SPEED = 10
