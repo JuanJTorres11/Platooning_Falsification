@@ -73,17 +73,12 @@ behavior Car4Behavior(speed=10):
 	interrupt when withinDistanceToAnyCars(self, C4_BRAKING_THRESHOLD):
 		do CollisionAvoidance(C4_BRAKING_THRESHOLD)
 
-
-
-##DEFINING SPATIAL RELATIONS
-initLane = Uniform(*network.lanes)
-initLaneSec = Uniform(*initLane.sections)
-
 #PLACEMENT
-spawnPt = OrientedPoint on initLaneSec.centerline
+initLane = network.roads[0].fowardLanes.lanes[0]
+spawnPt = initLane.centerline.pointAlongBy(2)
 
 c4 = Car at spawnPt,
-	with behavior EgoBehavior(CAR4_SPEED)
+	with behavior Car4Behavior(CAR4_SPEED)
 
 c3 = Car following roadDirection from c4 for C3_TO_C4,
 		with behavior Car3Behavior(CAR3_SPEED)
