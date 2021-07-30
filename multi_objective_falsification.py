@@ -56,8 +56,8 @@ class distance(specification_monitor):
             distances2 = positions[:, [2], :] - positions[:, [3], :]
             print("distances2:")
             print(distances2)
-            distances1 = np.linalg.norm(distances, axis=2)
-            distances2 = np.linalg.norm(distances, axis=2)
+            distances1 = np.linalg.norm(distances1, axis=2)
+            distances2 = np.linalg.norm(distances2, axis=2)
             rho1 = np.min(distances1) - 5
             rho2 = np.min(distances2) - 5
             return min(rho1, rho2)
