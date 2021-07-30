@@ -74,8 +74,8 @@ behavior Car4Behavior(speed=10):
 		do CollisionAvoidance(C4_BRAKING_THRESHOLD)
 
 #PLACEMENT
-initLane = network.roads[0].fowardLanes.lanes[0]
-spawnPt = initLane.centerline.pointAlongBy(2)
+initLane = network.roads[0].forwardLanes.lanes[0]
+spawnPt = initLane.centerline.pointAlongBy(15)
 
 c4 = Car at spawnPt,
 	with behavior Car4Behavior(CAR4_SPEED)
