@@ -50,12 +50,17 @@ class distance(specification_monitor):
             positions = np.array(simulation.result.trajectory)
             print("positions:")
             print(positions)
-            distances = positions[:, [0], :] - positions[:, 1:, :]
-            print("distances:")
-            print(distances)
-            distances = np.linalg.norm(distances, axis=2)
-            rho = np.min(distances) - 5
-            return rho
+            distances1 = positions[:, [1], :] - positions[:, 2:, :]
+            print("distances1:")
+            print(distances1)
+            distances2 = positions[:, [2], :] - positions[:, [3], :]
+            print("distances2:")
+            print(distances2)
+            distances1 = np.linalg.norm(distances, axis=2)
+            distances2 = np.linalg.norm(distances, axis=2)
+            rho1 = np.min(distances1) - 5
+            rho2 = np.min(distances2) - 5
+            return min(rho1, rho2)
 
         super().__init__(specification)
 
