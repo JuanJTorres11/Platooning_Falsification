@@ -4,14 +4,14 @@ param lgsvl_map = 'SingleLaneRoad'
 param time_step = 1.0/10
 model scenic.simulators.lgsvl.model
 param render = True
-param verifaiSamplerType = 'ce'
+param verifaiSamplerType = 'bo' #ce
 
 # Parameters of the scenario.
-param EGO_SPEED = VerifaiRange(10, 20)
-param EGO_BRAKING_THRESHOLD = VerifaiRange(10, 15)
+param EGO_SPEED = VerifaiRange(5, 20)
+param EGO_BRAKING_THRESHOLD = VerifaiRange(8, 10)
 
 #CONSTANTS
-TERMINATE_TIME = 6 / globalParameters.time_step
+TERMINATE_TIME = 5 / globalParameters.time_step
 CAR3_SPEED = 10
 CAR4_SPEED = 10
 LEAD_CAR_SPEED = 10
@@ -20,25 +20,24 @@ BRAKE_ACTION = 1.0
 THROTTLE_ACTION = 0.6
 
 
-LEADCAR_TO_EGO = 20
-EGO_TO_C3 = 20
-C3_TO_C4 = 20
-C4_TO_SPAWN = 1
+LEADCAR_TO_EGO = 15
+EGO_TO_C3 = 15
+C3_TO_C4 = 15
+SPAWN = 15
 
-C3_BRAKING_THRESHOLD = 15
-C4_BRAKING_THRESHOLD = 15
-LEADCAR_BRAKING_THRESHOLD = 15
+C3_BRAKING_THRESHOLD = 10
+C4_BRAKING_THRESHOLD = 10
+LEADCAR_BRAKING_THRESHOLD = 10
 
 
 ## DEFINING BEHAVIORS
 #COLLISION AVOIDANCE BEHAVIOR
-behavior CollisionAvoidance(safety_distance=15):
+behavior CollisionAvoidance(safety_distance=10):
 	while withinDistanceToAnyObjs(self, safety_distance):
 		take SetBrakeAction(BRAKE_ACTION)
 
 #EGO BEHAVIOR: Follow lane, and brake after passing a threshold distance to the leading car
 behavior EgoBehavior(speed=10):
-	print("ego's position: ", self.lane.uid)
 
 	try:
 		do FollowLaneBehavior(speed)
@@ -75,7 +74,7 @@ behavior Car4Behavior(speed=10):
 
 #PLACEMENT
 initLane = network.roads[0].forwardLanes.lanes[0]
-spawnPt = initLane.centerline.pointAlongBy(15)
+spawnPt = initLane.centerline.pointAlongBy(SPAWN)
 
 c4 = Car at spawnPt,
 	with behavior Car4Behavior(CAR4_SPEED)
@@ -89,4 +88,6 @@ ego = Car following roadDirection from c3 for EGO_TO_C3,
 leadCar = Car following roadDirection from ego for LEADCAR_TO_EGO,
     with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
 
+#require always (distance from ego.position to c3.position) >= 5
+#require always (distance from ego.position to leadCar.position) >= 5
 terminate when simulation().currentTime > TERMINATE_TIME
