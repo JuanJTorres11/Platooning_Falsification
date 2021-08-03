@@ -1,5 +1,5 @@
 #SET MAP AND MODEL (i.e. definitions of all referenceable vehicle types, road library, etc)
-param map  = localPath('../../tests/singlelaneroad.xodr')
+param map  = localPath('./singlelaneroad.xodr')
 param lgsvl_map = 'SingleLaneRoad'
 param time_step = 1.0/10
 model scenic.simulators.lgsvl.model
@@ -7,27 +7,27 @@ param render = True
 param verifaiSamplerType = 'bo' #ce
 
 # Parameters of the scenario.
-param EGO_SPEED = VerifaiRange(5, 20)
-param EGO_BRAKING_THRESHOLD = VerifaiRange(8, 10)
+param EGO_SPEED = VerifaiRange(5, 25)
+param EGO_BRAKING_THRESHOLD = VerifaiRange(6, 10)
 
 #CONSTANTS
-TERMINATE_TIME = 5 / globalParameters.time_step
-CAR3_SPEED = 10
-CAR4_SPEED = 10
-LEAD_CAR_SPEED = 10
+TERMINATE_TIME = 30 / globalParameters.time_step
+CAR3_SPEED = 20
+CAR4_SPEED = 20
+LEAD_CAR_SPEED = 20
 
 BRAKE_ACTION = 1.0
 THROTTLE_ACTION = 0.6
 
 
-LEADCAR_TO_EGO = 15
-EGO_TO_C3 = 15
-C3_TO_C4 = 15
+LEADCAR_TO_EGO = 8
+EGO_TO_C3 = 8
+C3_TO_C4 = 8
 SPAWN = 15
 
-C3_BRAKING_THRESHOLD = 10
-C4_BRAKING_THRESHOLD = 10
-LEADCAR_BRAKING_THRESHOLD = 10
+C3_BRAKING_THRESHOLD = 6
+C4_BRAKING_THRESHOLD = 6
+LEADCAR_BRAKING_THRESHOLD = 6
 
 
 ## DEFINING BEHAVIORS
@@ -88,6 +88,6 @@ ego = Car following roadDirection from c3 for EGO_TO_C3,
 leadCar = Car following roadDirection from ego for LEADCAR_TO_EGO,
     with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
 
-#require always (distance from ego.position to c3.position) >= 5
-#require always (distance from ego.position to leadCar.position) >= 5
+require always (distance from ego.position to c3.position) >= 5
+require always (distance from ego.position to leadCar.position) >= 5
 terminate when simulation().currentTime > TERMINATE_TIME
