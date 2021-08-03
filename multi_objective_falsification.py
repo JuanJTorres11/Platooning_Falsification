@@ -48,6 +48,7 @@ class distance(specification_monitor):
     def __init__(self):
         def specification(simulation):
             positions = np.array(simulation.result.trajectory)
+            """
             print("positions:")
             print(positions)
             distances1 = positions[:, [1], :] - positions[:, 2:, :]
@@ -61,6 +62,12 @@ class distance(specification_monitor):
             rho1 = np.min(distances1) - 5
             rho2 = np.min(distances2) - 5
             return min(rho1, rho2)
+            """
+            distances = positions[:, [1], :] - positions[:, 2:, :]
+            distances = np.linalg.norm(distances, axis=2)
+            rho = np.min(distances) - 5
+            return rho
+
 
         super().__init__(specification)
 
