@@ -63,7 +63,7 @@ class distance(specification_monitor):
             rho2 = np.min(distances2) - 5
             return min(rho1, rho2)
             """
-            distances = positions[:, [1], :] - positions[:, 2:, :]
+            distances = positions[:, [3], :] - positions[:, [2], :]
             distances = np.linalg.norm(distances, axis=2)
             rho = np.min(distances) - 5
             return rho
@@ -71,12 +71,6 @@ class distance(specification_monitor):
 
         super().__init__(specification)
         
-def withinDistanceToCar(vehicle1, vehicle2, thresholdDistance):
-    """ checks whether there exists any obj
-    (1) in front of the vehicle, (2) on the same lane, (3) within thresholdDistance """
-    if (vehicle1 can see vehicle2) and (distance from vehicle1 to vehicle2) < thresholdDistance:
-        return True        
-    return False
 
 """
 Runs all experiments in a directory.
