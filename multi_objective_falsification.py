@@ -1,6 +1,5 @@
 """
 Framework for experimentation of parallel and multi-objective falsification.
-
 Author: Kesav Viswanadha
 Email: kesav@berkeley.edu
 """
@@ -48,29 +47,23 @@ class distance(specification_monitor):
     def __init__(self):
         def specification(simulation):
             positions = np.array(simulation.result.trajectory)
-            """
-            print("positions:")
-            print(positions)
+
             distances1 = positions[:, [1], :] - positions[:, 2:, :]
-            print("distances1:")
-            print(distances1)
             distances2 = positions[:, [2], :] - positions[:, [3], :]
-            print("distances2:")
-            print(distances2)
             distances1 = np.linalg.norm(distances1, axis=2)
             distances2 = np.linalg.norm(distances2, axis=2)
             rho1 = np.min(distances1) - 5
             rho2 = np.min(distances2) - 5
             return min(rho1, rho2)
             """
-            distances = positions[:, [3], :] - positions[:, [2], :]
+            distances = positions[:, [0], :] - positions[:,1:, :]
             distances = np.linalg.norm(distances, axis=2)
             rho = np.min(distances) - 5
             return rho
-
+            """
 
         super().__init__(specification)
-        
+
 
 """
 Runs all experiments in a directory.
@@ -120,7 +113,6 @@ def run_experiments(path, parallel=False, model=None,
 
 """
 Runs a single falsification experiment.
-
 Arguments:
     path: Path to Scenic script to be run.
     parallel: Whether or not to enable parallelism.
@@ -146,7 +138,7 @@ def run_experiment(path, parallel=False, model=None,
         save_safe_table=True,
         max_time=1800,
     )
-    server_options = DotMap(maxSteps=300, verbosity=0)
+    server_options = DotMap(maxSteps=300, verbosity=2)
     monitor = distance()
 
     falsifier_cls = generic_parallel_falsifier if parallel else generic_falsifier
@@ -174,7 +166,7 @@ def run_experiment(path, parallel=False, model=None,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', '-p', type=str, default='platoon.scenic',
+    parser.add_argument('--path', '-p', type=str, default='platv2a.scenic',
                         help='Path to Scenic script')
     parser.add_argument('--parallel', action='store_true')
     parser.add_argument('--num-workers', type=int, default=5,
