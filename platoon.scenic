@@ -9,9 +9,10 @@ param verifaiSamplerType = 'ce' #bo
 # Parameters of the scenario.
 param EGO_SPEED = VerifaiRange(5, 25)
 param EGO_BRAKING_THRESHOLD = VerifaiRange(6, 10)
+param MY_DELAY = VerifaiRange(10,80)
 
 #CONSTANTS
-TERMINATE_TIME = 30 / globalParameters.time_step
+TERMINATE_TIME = 90 / globalParameters.time_step
 CAR3_SPEED = 20
 CAR4_SPEED = 20
 LEAD_CAR_SPEED = 20
@@ -28,6 +29,7 @@ LEADCAR_BRAKING_THRESHOLD = 6
 
 
 ## DEFINING BEHAVIORS
+
 #COLLISION AVOIDANCE BEHAVIOR
 behavior CollisionAvoidance(safety_distance=10):
 	while withinDistanceToAnyObjs(self, safety_distance):
@@ -38,10 +40,16 @@ behavior withinDistanceToCar(vehicle1, vehicle2, thresholdDistance):
         return True        
     return False
 
+behavior BrakeBehavior():
+	while True:
+		take SetBrakeAction(BRAKE_ACTION)
+
 #EGO BEHAVIOR: Follow lane, and brake after passing a threshold distance to the leading car
 behavior EgoBehavior(front_car, speed=10):
 
 	try:
+		do FollowLaneBehavior(speed) for globalParameters.MY_DELAY seconds
+		do BrakeBehavior() for 3 seconds
 		do FollowLaneBehavior(speed)
 
 	interrupt when withinDistanceToCar(self, front_car, globalParameters.EGO_BRAKING_THRESHOLD):

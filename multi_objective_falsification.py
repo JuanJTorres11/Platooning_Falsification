@@ -14,9 +14,8 @@ import argparse
 from verifai.samplers.scenic_sampler import ScenicSampler
 from verifai.scenic_server import ScenicServer
 from verifai.falsifier import generic_falsifier, generic_parallel_falsifier
-from verifai.monitor import multi_objective_monitor, specification_monitor
+from verifai.monitor import specification_monitor
 from verifai.falsifier import generic_falsifier
-import networkx as nx
 import pandas as pd
 
 
@@ -55,12 +54,10 @@ class distance(specification_monitor):
             rho1 = np.min(distances1) - 5
             rho2 = np.min(distances2) - 5
             return min(rho1, rho2)
-            """
-            distances = positions[:, [0], :] - positions[:,1:, :]
-            distances = np.linalg.norm(distances, axis=2)
-            rho = np.min(distances) - 5
-            return rho
-            """
+            # distances = positions[:, [0], :] - positions[:,1:, :]
+            # distances = np.linalg.norm(distances, axis=2)
+            # rho = np.min(distances) - 5
+            # return rho
 
         super().__init__(specification)
 
@@ -133,10 +130,9 @@ def run_experiment(path, parallel=False, model=None,
         params['model'] = model
     sampler = ScenicSampler.fromScenario(path, **params)
     falsifier_params = DotMap(
-        n_iters=None,
+        n_iters=50,
         save_error_table=True,
         save_safe_table=True,
-        max_time=1800,
     )
     server_options = DotMap(maxSteps=300, verbosity=2)
     monitor = distance()
