@@ -1,7 +1,7 @@
 """
-Framework for experimentation of parallel and multi-objective falsification.
-Author: Kesav Viswanadha
-Email: kesav@berkeley.edu
+Framework for experimentation of platooning attacks.
+Author: Iván Salgado & Juan José Torres
+Email: ifsalgad@ucsc.edu & jtorr127@ucsc.edu 
 """
 
 import time
