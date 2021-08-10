@@ -8,7 +8,7 @@ param verifaiSamplerType = 'bo' #ce
 
 # Parameters of the scenario.
 param EGO_SPEED = VerifaiRange(2, 30)
-param EGO_BRAKING_THRESHOLD = VerifaiRange(5, 15)
+param EGO_BRAKING_THRESHOLD = VerifaiRange(6, 15)
 
 #CONSTANTS
 TERMINATE_TIME = 20 / globalParameters.time_step
