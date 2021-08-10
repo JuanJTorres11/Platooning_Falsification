@@ -17,6 +17,7 @@ from verifai.falsifier import generic_falsifier, generic_parallel_falsifier
 from verifai.monitor import specification_monitor
 from verifai.falsifier import generic_falsifier
 import pandas as pd
+import random
 
 
 def announce(message):
@@ -34,6 +35,19 @@ def announce(message):
     print(m)
     print(border)
 
+iteration = 1
+
+def create_distances_csv(distances1, distances2):
+    distances = {"c1_c2": [], "c1_c3": [], "c2_c3": []}
+    global iteration
+    for i in distances1:
+        distances['c1_c2'].append(i[0])
+        distances['c1_c3'].append(i[1])
+    for j in distances2:
+        distances['c2_c3'].append(j[0])
+    df = pd.DataFrame.from_dict(distances, orient="index")
+    df.to_csv(f"distances{iteration}.csv")
+    iteration += 1
 
 """
 Single-objective specification. This monitor is similar to the one above, but takes a
@@ -51,6 +65,7 @@ class distance(specification_monitor):
             distances2 = positions[:, [2], :] - positions[:, [3], :]
             distances1 = np.linalg.norm(distances1, axis=2)
             distances2 = np.linalg.norm(distances2, axis=2)
+            create_distances_csv(distances1, distances2)
             rho1 = np.min(distances1) - 5
             rho2 = np.min(distances2) - 5
             return min(rho1, rho2)
