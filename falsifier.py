@@ -37,15 +37,16 @@ def announce(message):
 
 iteration = 1
 
-def create_distances_csv(distances1, distances2):
-    distances = {"c1_c2": [], "c1_c3": [], "c2_c3": []}
+def create_distances_csv(d1, d2, d3):
+    distances = {"c1_c2": [], "c2_c0": [], "c0_c3": []}
     global iteration
-    for i in distances1:
+    for i in d1:
         distances['c1_c2'].append(i[0])
-        distances['c1_c3'].append(i[1])
-    for j in distances2:
-        distances['c2_c3'].append(j[0])
-    df = pd.DataFrame.from_dict(distances, orient="index")
+    for j in d2:
+        distances['c2_c0'].append(j[0])
+    for k in d3:
+        distances['c0_c3'].append(k[0])
+    df = pd.DataFrame.from_dict(distances)
     df.to_csv(f"distances{iteration}.csv")
     iteration += 1
 
@@ -65,7 +66,13 @@ class distance(specification_monitor):
             distances2 = positions[:, [2], :] - positions[:, [3], :]
             distances1 = np.linalg.norm(distances1, axis=2)
             distances2 = np.linalg.norm(distances2, axis=2)
-            create_distances_csv(distances1, distances2)
+            d1 = positions[:, [1], :] - positions[:, [2], :]
+            d1 = np.linalg.norm(d1, axis=2)
+            d2 = positions[:, [2], :] - positions[:, [0], :]
+            d2 = np.linalg.norm(d2, axis=2)
+            d3 = positions[:, [0], :] - positions[:, [3], :]
+            d3 = np.linalg.norm(d3, axis=2)
+            create_distances_csv(d1, d2, d3)
             rho1 = np.min(distances1) - 5
             rho2 = np.min(distances2) - 5
             return min(rho1, rho2)
