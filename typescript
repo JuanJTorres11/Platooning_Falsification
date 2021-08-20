@@ -1,0 +1,45 @@
+Script started on 2021-08-09 20:23:40-07:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="120" LINES="30"]
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ ./scre[Kiopt[K[K[Kpt
+bash: ./script: No such file or directory
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ script.sh
+bash: script.sh: command not found
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ chmod 777 script.sh 
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ ./script.sh `
+> 
+> 
+> 
+> 
+> ;
+> C^C
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ ./script.sh `
+
+
+
+
+;^C
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ ./script
+bash: ./script: No such file or directory
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ ./script.sh
+  File "attack_1_bo/falsifier.py", line 3
+SyntaxError: Non-ASCII character '\xc3' in file attack_1_bo/falsifier.py on line 4, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+  File "attack_1_ce/falsifier.py", line 3
+SyntaxError: Non-ASCII character '\xc3' in file attack_1_ce/falsifier.py on line 4, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+  File "attack_2_bo/falsifier.py", line 3
+SyntaxError: Non-ASCII character '\xc3' in file attack_2_bo/falsifier.py on line 4, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+  File "attack_2_ce/falsifier.py", line 3
+SyntaxError: Non-ASCII character '\xc3' in file attack_2_ce/falsifier.py on line 4, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+  File "attack_3_bo/falsifier.py", line 3
+SyntaxError: Non-ASCII character '\xc3' in file attack_3_bo/falsifier.py on line 4, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+  File "attack_3_ce/falsifier.py", line 3
+SyntaxError: Non-ASCII character '\xc3' in file attack_3_ce/falsifier.py on line 4, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+  File "attack_4_bo/falsifier.py", line 3
+SyntaxError: Non-ASCII character '\xc3' in file attack_4_bo/falsifier.py on line 4, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+  File "attack_4_ce/falsifier.py", line 3
+SyntaxError: Non-ASCII character '\xc3' in file attack_4_ce/falsifier.py on line 4, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ cd attack_1_ce/
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification/attack_1_ce[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification/attack_1_ce[00m$ ls
+falsifier.py  platoon.scenic
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification/attack_1_ce[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification/attack_1_ce[00m$ nano falsifier.py 
+[?1049h[22;0;0t[1;30r(B[m[4l[?7h[39;49m[?1h=[?1h=[?1h=[?25l[39;49m(B[m[H[2J[28;53H(B[0;7m[ Reading File ](B[m[28;52H(B[0;7m[ Read 202 lines ](B[m[H(B[0;7m  GNU nano 3.2                                          falsifier.py                                                    [1;119H(B[m[29d(B[0;7m^G(B[m Get Help    (B[0;7m^O(B[m Write Out   (B[0;7m^W(B[m Where Is    (B[0;7m^K(B[m Cut Text    (B[0;7m^J(B[m Justify     (B[0;7m^C(B[m Cur Pos     (B[0;7mM-U(B[m Undo[106G(B[0;7mM-A(B[m Mark Text[30d(B[0;7m^X(B[m Exit[30;16H(B[0;7m^R(B[m Read File   (B[0;7m^\(B[m Replace     (B[0;7m^U(B[m Uncut Text  (B[0;7m^T(B[m To Spell    (B[0;7m^_(B[m Go To Line  (B[0;7mM-E(B[m Redo[106G(B[0;7mM-6(B[m Copy Text[28d[3d(B[0;1m[32m"""[4dFramework for experimentation of platooning attacks.[5dAuthor: Iván Salgado & Juan José Torres[6dEmail: ifsalgad@ucsc.edu & jtorr127@ucsc.edu(B[0m[42m [7d(B[0;1m[32m"""[9d[36mimport[39m(B[m time[10d(B[0;1m[36mimport[39m(B[m os[11d(B[0;1m[36mimport[39m(B[m numpy (B[0;1m[36mas[39m(B[m np[12d(B[0;1m[36mfrom[39m(B[m dotmap (B[0;1m[36mimport[39m(B[m DotMap[13d(B[0;1m[36mimport[39m(B[m traceback[14d(B[0;1m[36mimport[39m(B[m argparse[16d(B[0;1m[36mfrom[39m(B[m verifai.samplers.scenic_sampler (B[0;1m[36mimport[39m(B[m ScenicSampler[17d(B[0;1m[36mfrom[39m(B[m verifai.scenic_server (B[0;1m[36mimport[39m(B[m ScenicServer[18d(B[0;1m[36mfrom[39m(B[m verifai.falsifier (B[0;1m[36mimport[39m(B[m generic_falsifier, generic_parallel_falsifier[19d(B[0;1m[36mfrom[39m(B[m verifai.monitor (B[0;1m[36mimport[39m(B[m specification_monitor[20d(B[0;1m[36mfrom[39m(B[m verifai.falsifier (B[0;1m[36mimport[39m(B[m generic_falsifier[21d(B[0;1m[36mimport[39m(B[m pandas (B[0;1m[36mas[39m(B[m pd[22d(B[0;1m[36mimport[39m(B[m random[25d(B[0;1m[36mdef[34m announce[39m(B[m(message):[26;5Hlines = message.split((B[0;1m[32m'\n'[39m(B[m)[27;5Hsize = max([len(p) (B[0;1m[36mfor[39m(B[m p (B[0;1m[36min[39m(B[m lines]) + 4[3d[?12l[?25h[?25l[28;35H(B[0;7m[ line 1/203 (0%), col 1/4 (25%), char 0/7531 (0%) ](B[m[3d[?12l[?25h[?25l[28d[J[30;120H[?12l[?25h[30;1H[?1049l[23;0;0t[?1l>]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification/attack_1_ce[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification/attack_1_ce[00m$ cd ..
+]0;jtorr127@bsoe-alacard-g7: ~/workspace/Platooning_Falsification[01;32mjtorr127@bsoe-alacard-g7[00m:[01;34m~/workspace/Platooning_Falsification[00m$ nano script.sh 
+[?1049h[22;0;0t[1;30r(B[m[4l[?7h[39;49m[?1h=[?1h=[?1h=[?25l[39;49m(B[m[H[2J[28;53H(B[0;7m[ Reading File ](B[m[28;52H(B[0;7m[ Read 10 lines ](B[m[H(B[0;7m  GNU nano 3.2                                           script.sh                                                      [1;119H(B[m[29d(B[0;7m^G(B[m Get Help    (B[0;7m^O(B[m Write Out   (B[0;7m^W(B[m Where Is    (B[0;7m^K(B[m Cut Text    (B[0;7m^J(B[m Justify     (B[0;7m^C(B[m Cur Pos     (B[0;7mM-U(B[m Undo[106G(B[0;7mM-A(B[m Mark Text[30d(B[0;7m^X(B[m Exit[30;16H(B[0;7m^R(B[m Read File   (B[0;7m^\(B[m Replace     (B[0;7m^U(B[m Uncut Text  (B[0;7m^T(B[m To Spell    (B[0;7m^_(B[m Go To Line  (B[0;7mM-E(B[m Redo[106G(B[0;7mM-6(B[m Copy Text[28d[3d[39;49m[36m#! /bin/bash[5d[39m(B[mpython attack_1_bo/falsifier.py(B[0;1m[35m --model[39m(B[m lgsvl[6dpython attack_1_ce/falsifier.py(B[0;1m[35m --model[39m(B[m lgsvl[7dpython attack_2_bo/falsifier.py(B[0;1m[35m --model[39m(B[m lgsvl[8dpython attack_2_ce/falsifier.py(B[0;1m[35m --model[39m(B[m lgsvl[9dpython attack_3_bo/falsifier.py(B[0;1m[35m --model[39m(B[m lgsvl[10dpython attack_3_ce/falsifier.py(B[0;1m[35m --model[39m(B[m lgsvl[11dpython attack_4_bo/falsifier.py(B[0;1m[35m --model[39m(B[m lgsvl[12dpython attack_4_ce/falsifier.py(B[0;1m[35m --model[39m(B[m lgsvl[3d[?12l[?25h[?25l[4d[?12l[?25h[?25l[5d[?12l[?25h[?25lp[?12l[?25h[?25ly[?12l[?25h[?25lt[?12l[?25h[?25lh[?12l[?25h[?25lo[?12l[?25h[?25ln[?12l[?25h[?25l [?12l[?25h[?25la[?12l[?25h[?25l[?12l[?25h[?25l
