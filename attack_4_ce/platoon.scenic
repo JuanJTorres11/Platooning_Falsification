@@ -1,5 +1,5 @@
 #SET MAP AND MODEL (i.e. definitions of all referenceable vehicle types, road library, etc)
-param map  = localPath('./singlelaneroad.xodr')
+param map  = localPath('./../singlelaneroad.xodr')
 param lgsvl_map = 'SingleLaneRoad'
 param time_step = 1.0/10
 model scenic.simulators.lgsvl.model
