@@ -9,9 +9,10 @@ param verifaiSamplerType = 'ce' #ce
 # Parameters of the scenario.
 param EGO_SPEED = VerifaiRange(2, 30)
 param EGO_BRAKING_THRESHOLD = VerifaiRange(6, 15)
+param TIME_DELAY = VerifaiRange(5,15)
 
 #CONSTANTS
-TERMINATE_TIME = 20 / globalParameters.time_step
+TERMINATE_TIME = 40 / globalParameters.time_step
 CAR3_SPEED = 20
 CAR4_SPEED = 20
 LEAD_CAR_SPEED = 20
@@ -37,12 +38,16 @@ behavior CollisionAvoidance(safety_distance=10):
 
 #EGO BEHAVIOR: Follow lane, and brake after passing a threshold distance to the leading car
 behavior EgoBehavior(speed=10):
-
+	last_stop = 0
 	try:
 		do FollowLaneBehavior(speed)
 
 	interrupt when withinDistanceToAnyObjs(self, globalParameters.EGO_BRAKING_THRESHOLD):
 		do CollisionAvoidance(globalParameters.EGO_BRAKING_THRESHOLD)
+	interrupt when simulation().currentTime - last_stop  > globalParameters.TIME_DELAY:
+		take SetBrakeAction(BRAKE_ACTION)
+		last_stop = simulation().currentTime
+ 
 
 #LEAD CAR BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
 behavior LeadingCarBehavior(speed=10):
@@ -72,6 +77,7 @@ behavior Car4Behavior(speed=10):
 		do CollisionAvoidance(C4_BRAKING_THRESHOLD)
 
 #PLACEMENT
+
 initLane = network.roads[0].forwardLanes.lanes[0]
 spawnPt = initLane.centerline.pointAlongBy(SPAWN)
 

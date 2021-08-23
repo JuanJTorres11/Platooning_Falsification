@@ -152,7 +152,7 @@ def run_experiment(path, parallel=False, model=None,
         params['model'] = model
     sampler = ScenicSampler.fromScenario(path, **params)
     falsifier_params = DotMap(
-        n_iters=50,
+        n_iters=100,
         save_error_table=True,
         save_safe_table=True,
     )

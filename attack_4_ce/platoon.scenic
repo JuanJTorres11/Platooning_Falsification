@@ -11,7 +11,7 @@ param EGO_SPEED = VerifaiRange(2, 30)
 param EGO_BRAKING_THRESHOLD = VerifaiRange(5, 15)
 
 #CONSTANTS
-TERMINATE_TIME = 20 / globalParameters.time_step
+TERMINATE_TIME = 40 / globalParameters.time_step
 CAR3_SPEED = 20
 CAR2_SPEED = 20
 LEAD_CAR_SPEED = 20
@@ -88,4 +88,5 @@ leadCar = Car following roadDirection from c2 for LEADCAR_TO_EGO,
     with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
 
 require always (distance from ego.position to c3.position) >= 5
+terminate when leadCar.lane == None
 terminate when simulation().currentTime > TERMINATE_TIME

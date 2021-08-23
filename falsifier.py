@@ -184,7 +184,7 @@ def run_experiment(path, parallel=False, model=None,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', '-p', type=str, default='platv2a.scenic',
+    parser.add_argument('--path', '-p', type=str, default='platv1a.scenic',
                         help='Path to Scenic script')
     parser.add_argument('--parallel', action='store_true')
     parser.add_argument('--num-workers', type=int, default=5,
