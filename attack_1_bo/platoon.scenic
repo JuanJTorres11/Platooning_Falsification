@@ -14,7 +14,7 @@ param TIME_DELAY = VerifaiRange(5, 15)
 TERMINATE_TIME = 40 / globalParameters.time_step
 CAR3_SPEED = 20
 CAR4_SPEED = 20
-LEAD_CAR_SPEED = 20
+CAR2_SPEED = 20
 
 BRAKE_ACTION = 1.0
 THROTTLE_ACTION = 0.6
@@ -40,8 +40,8 @@ behavior EgoBehavior(speed=10):
 		take SetBrakeAction(BRAKE_ACTION)
 		last_stop = simulation().currentTime	
 
-#LEAD CAR BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
-behavior LeadingCarBehavior(speed=10):
+#CAR2 BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
+behavior Car2Behavior(speed=10):
 
 	try:
 		do FollowLaneBehavior(speed)
@@ -69,7 +69,7 @@ behavior Car4Behavior(speed=10):
 
 #PLACEMENT
 initLane = network.roads[0].forwardLanes.lanes[0]
-spawnPt = initLane.centerline.pointAlongBy(SPAWN)
+spawnPt = initLane.centerline.pointAlongBy(D_BTW_CARS)
 
 c4 = Car at spawnPt,
 	with behavior Car4Behavior(CAR4_SPEED)
@@ -77,12 +77,12 @@ c4 = Car at spawnPt,
 c3 = Car following roadDirection from c4 for D_BTW_CARS,
 		with behavior Car3Behavior(CAR3_SPEED)
 
-leadCar = Car following roadDirection from c3 for D_BTW_CARS,
-		with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
+c2 = Car following roadDirection from c3 for D_BTW_CARS,
+		with behavior Car2Behavior(CAR2_SPEED)
 
-ego = Car following roadDirection from leadCar for D_BTW_CARS,
+ego = Car following roadDirection from c2 for D_BTW_CARS,
     with behavior EgoBehavior(globalParameters.EGO_SPEED)
 
-require always (distance from ego.position to leadCar.position) >= 5
+require always (distance from ego.position to c2.position) >= 5
 terminate when ego.lane == None 
 terminate when simulation().currentTime > TERMINATE_TIME
