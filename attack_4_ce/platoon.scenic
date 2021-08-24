@@ -8,7 +8,7 @@ param verifaiSamplerType = 'ce'
 
 # Parameters of the scenario.
 param EGO_SPEED = VerifaiRange(2, 30)
-param EGO_BRAKING_THRESHOLD = VerifaiRange(5, 15)
+param TIME_DELAY = VerifaiRange(5, 15)
 
 #CONSTANTS
 TERMINATE_TIME = 40 / globalParameters.time_step
@@ -20,14 +20,9 @@ BRAKE_ACTION = 1.0
 THROTTLE_ACTION = 0.6
 
 
-LEADCAR_TO_EGO = 7
-EGO_TO_C3 = 7
-C3_TO_C4 = 7
-SPAWN = 7
+D_BTW_CARS = 7
 
-C3_BRAKING_THRESHOLD = 6
-C2_BRAKING_THRESHOLD = 6
-LEADCAR_BRAKING_THRESHOLD = 6
+BRAKING_THRESHOLD = 6
 
 
 ## DEFINING BEHAVIORS
@@ -37,12 +32,15 @@ behavior CollisionAvoidance(safety_distance=10):
 
 #EGO BEHAVIOR: Follow lane, and brake after passing a threshold distance to the leading car
 behavior EgoBehavior(speed=10):
-
+	last_stop = 0
 	try:
 		do FollowLaneBehavior(speed)
 
-	interrupt when withinDistanceToAnyObjs(self, globalParameters.EGO_BRAKING_THRESHOLD):
-		do CollisionAvoidance(globalParameters.EGO_BRAKING_THRESHOLD)
+	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
+		do CollisionAvoidance(BRAKING_THRESHOLD)
+	interrupt when simulation().currentTime - last_stop  > globalParameters.TIME_DELAY:
+		take SetBrakeAction(BRAKE_ACTION)
+		last_stop = simulation().currentTime		
 
 #LEAD CAR BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
 behavior LeadingCarBehavior(speed=10):
@@ -50,8 +48,8 @@ behavior LeadingCarBehavior(speed=10):
 	try:
 		do FollowLaneBehavior(speed)
 
-	interrupt when withinDistanceToAnyObjs(self, LEADCAR_BRAKING_THRESHOLD):
-		do CollisionAvoidance(LEADCAR_BRAKING_THRESHOLD)
+	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
+		do CollisionAvoidance(BRAKING_THRESHOLD)
 
 #CAR3 BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
 behavior Car3Behavior(speed=10):
@@ -59,8 +57,8 @@ behavior Car3Behavior(speed=10):
 	try:
 		do FollowLaneBehavior(speed)
 
-	interrupt when withinDistanceToAnyObjs(self, C3_BRAKING_THRESHOLD):
-		do CollisionAvoidance(C3_BRAKING_THRESHOLD)
+	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
+		do CollisionAvoidance(BRAKING_THRESHOLD)
 
 #CAR2 BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
 behavior Car2Behavior(speed=10):
@@ -68,23 +66,23 @@ behavior Car2Behavior(speed=10):
 	try:
 		do FollowLaneBehavior(speed)
 
-	interrupt when withinDistanceToAnyObjs(self, C2_BRAKING_THRESHOLD):
-		do CollisionAvoidance(C2_BRAKING_THRESHOLD)
+	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
+		do CollisionAvoidance(BRAKING_THRESHOLD)
 
 #PLACEMENT
 initLane = network.roads[0].forwardLanes.lanes[0]
-spawnPt = initLane.centerline.pointAlongBy(SPAWN)
+spawnPt = initLane.centerline.pointAlongBy(D_BTW_CARS)
 
 ego = Car at spawnPt,
 	with behavior EgoBehavior(globalParameters.EGO_SPEED)
 
-c3 = Car following roadDirection from ego for C3_TO_C4,
+c3 = Car following roadDirection from ego for D_BTW_CARS,
 		with behavior Car3Behavior(CAR3_SPEED)
 
-c2 = Car following roadDirection from c3 for EGO_TO_C3,
+c2 = Car following roadDirection from c3 for D_BTW_CARS,
 		with behavior Car2Behavior(CAR2_SPEED)
 
-leadCar = Car following roadDirection from c2 for LEADCAR_TO_EGO,
+leadCar = Car following roadDirection from c2 for D_BTW_CARS,
     with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
 
 require always (distance from ego.position to c3.position) >= 5
