@@ -156,7 +156,7 @@ def run_experiment(path, parallel=False, model=None,
         save_error_table=True,
         save_safe_table=True,
     )
-    server_options = DotMap(maxSteps=300, verbosity=2)
+    server_options = DotMap(maxSteps=1000, verbosity=2)
     monitor = distance()
 
     falsifier_cls = generic_parallel_falsifier if parallel else generic_falsifier

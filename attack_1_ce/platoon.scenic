@@ -83,6 +83,6 @@ c2 = Car following roadDirection from c3 for D_BTW_CARS,
 ego = Car following roadDirection from c2 for D_BTW_CARS,
     with behavior EgoBehavior(globalParameters.EGO_SPEED)
 
-require always (distance from ego.position to c2.position) >= 5
+require always (distance from ego.position to c2.position) > 4.99
 terminate when ego.lane == None 
 terminate when simulation().currentTime > TERMINATE_TIME
