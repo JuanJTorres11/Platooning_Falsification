@@ -7,11 +7,11 @@ param render = True
 param verifaiSamplerType = 'ce'
 
 # Parameters of the scenario.
-param EGO_SPEED = VerifaiRange(2, 30)
+param BRAKE_INTENSITY = VerifaiRange(0, 1)
 param TIME_DELAY = VerifaiRange(5, 15)
 
 #CONSTANTS
-TERMINATE_TIME = 40 / globalParameters.time_step
+EGO_SPEED = 20
 CAR3_SPEED = 20
 CAR4_SPEED = 20
 LEAD_CAR_SPEED = 20
@@ -39,7 +39,7 @@ behavior EgoBehavior(speed=10):
 	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
 		do CollisionAvoidance(BRAKING_THRESHOLD)
 	interrupt when simulation().currentTime - last_stop  > globalParameters.TIME_DELAY:
-		take SetBrakeAction(BRAKE_ACTION)
+		take SetBrakeAction(globalParameters.BRAKE_INTENSITY)
 		last_stop = simulation().currentTime		
 
 #LEAD CAR BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
@@ -80,12 +80,11 @@ c3 = Car following roadDirection from c4 for D_BTW_CARS,
 		with behavior Car3Behavior(CAR3_SPEED)
 
 ego = Car following roadDirection from c3 for D_BTW_CARS,
-		with behavior EgoBehavior(globalParameters.EGO_SPEED)
+		with behavior EgoBehavior(EGO_SPEED)
 
 leadCar = Car following roadDirection from ego for D_BTW_CARS,
     with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
 
-require always (distance from ego.position to c3.position) > 4.99
-require always (distance from ego.position to leadCar.position) > 4.99
+require always (distance from ego.position to c3.position) > 4.5
+require always (distance from ego.position to leadCar.position) > 4.5
 terminate when leadCar.lane == None
-terminate when simulation().currentTime > TERMINATE_TIME
