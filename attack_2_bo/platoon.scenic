@@ -87,4 +87,4 @@ leadCar = Car following roadDirection from ego for D_BTW_CARS,
 
 require always (distance from ego.position to c3.position) >= 5
 require always (distance from ego.position to leadCar.position) >= 5
-terminate when ego.lane == None
+terminate when ego._lane == None
