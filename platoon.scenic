@@ -1,59 +1,56 @@
 #SET MAP AND MODEL (i.e. definitions of all referenceable vehicle types, road library, etc)
-param map  = localPath('./singlelaneroad.xodr')
+param map  = localPath('./../singlelaneroad.xodr')
 param lgsvl_map = 'SingleLaneRoad'
 param time_step = 1.0/10
 model scenic.simulators.lgsvl.model
 param render = True
-param verifaiSamplerType = 'ce' #bo
+param verifaiSamplerType = 'bo'
 
 # Parameters of the scenario.
-param EGO_SPEED = VerifaiRange(5, 25)
-param EGO_BRAKING_THRESHOLD = VerifaiRange(6, 10)
-param MY_DELAY = VerifaiRange(10,80)
+param BRAKE_INTENSITY = VerifaiRange(0, 1)
+param TIME_DELAY = VerifaiRange(1, 40)
 
 #CONSTANTS
-TERMINATE_TIME = 40 / globalParameters.time_step
+EGO_SPEED  = 20
 CAR3_SPEED = 20
 CAR4_SPEED = 20
-LEAD_CAR_SPEED = 20
+CAR2_SPEED = 20
 
 BRAKE_ACTION = 1.0
 THROTTLE_ACTION = 0.6
 
-DISTANCE_BETWEEN_CARS = 8
-SPAWN = 15
+D_BTW_CARS = 7
 
-C3_BRAKING_THRESHOLD = 6
-C4_BRAKING_THRESHOLD = 6
-LEADCAR_BRAKING_THRESHOLD = 6
-
+BRAKING_THRESHOLD = 6
 
 ## DEFINING BEHAVIORS
-
 #COLLISION AVOIDANCE BEHAVIOR
 behavior CollisionAvoidance():
-	take SetBrakeAction(BRAKE_ACTION)		
-
+	take SetBrakeAction(BRAKE_ACTION)
+#BRAKE BEHAVIOR
 behavior BrakeBehavior():
-	while True:
-		take SetBrakeAction(BRAKE_ACTION)
+	take SetBrakeAction(globalParameters.BRAKE_INTENSITY)
 
 #EGO BEHAVIOR: Follow lane, and brake after passing a threshold distance to the leading car
 behavior EgoBehavior(speed=10):
 
 	try:
-		do FollowLaneBehavior(speed) for globalParameters.MY_DELAY seconds
-		do BrakeBehavior() for 3 seconds
+		do FollowLaneBehavior(speed) for 4 seconds
+		do BrakeBehavior() for globalParameters.TIME_DELAY
 		do FollowLaneBehavior(speed)
 
-	interrupt when withinDistanceToAnyObjs(self, globalParameters.EGO_BRAKING_THRESHOLD):
+	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
 		do CollisionAvoidance()
+	
 
-#LEAD CAR BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
-behavior LeadingCarBehavior(speed=10):
+#CAR2 BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
+behavior Car2Behavior(speed=10):
 
 	try:
 		do FollowLaneBehavior(speed)
+
+	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
+		do CollisionAvoidance()
 
 #CAR3 BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
 behavior Car3Behavior(speed=10):
@@ -61,7 +58,7 @@ behavior Car3Behavior(speed=10):
 	try:
 		do FollowLaneBehavior(speed)
 
-	interrupt when withinDistanceToAnyObjs(self, C3_BRAKING_THRESHOLD):
+	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
 		do CollisionAvoidance()
 
 #CAR4 BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
@@ -70,25 +67,24 @@ behavior Car4Behavior(speed=10):
 	try:
 		do FollowLaneBehavior(speed)
 
-	interrupt when withinDistanceToAnyObjs(self, C4_BRAKING_THRESHOLD):
+	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
 		do CollisionAvoidance()
 
 #PLACEMENT
 initLane = network.roads[0].forwardLanes.lanes[0]
-spawnPt = initLane.centerline.pointAlongBy(SPAWN)
+spawnPt = initLane.centerline.pointAlongBy(D_BTW_CARS)
 
-leadCar = Car at spawnPt,
-    with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
+c4 = Car at spawnPt,
+	with behavior Car4Behavior(CAR4_SPEED)
 
-ego = Car following roadDirection from leadCar for DISTANCE_BETWEEN_CARS,
-	with behavior EgoBehavior(leadCar, globalParameters.EGO_SPEED)
+c3 = Car following roadDirection from c4 for D_BTW_CARS,
+		with behavior Car3Behavior(CAR3_SPEED)
 
-c3 = Car following roadDirection from ego for DISTANCE_BETWEEN_CARS,
-	with behavior Car3Behavior(ego, CAR3_SPEED)
-	
-c4 = Car following roadDirection from c3 for DISTANCE_BETWEEN_CARS,
-	with behavior Car4Behavior(c3, CAR4_SPEED)
+c2 = Car following roadDirection from c3 for D_BTW_CARS,
+		with behavior Car2Behavior(CAR2_SPEED)
 
-require always (distance from ego.position to c3.position) >= 5
-require always (distance from ego.position to leadCar.position) >= 5
-terminate when simulation().currentTime > TERMINATE_TIME
+ego = Car following roadDirection from c2 for D_BTW_CARS,
+    with behavior EgoBehavior(EGO_SPEED)
+
+require always (distance from ego.position to c2.position) >= 5
+terminate when ego._lane == None 

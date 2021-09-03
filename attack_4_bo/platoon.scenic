@@ -85,5 +85,5 @@ c2 = Car following roadDirection from c3 for D_BTW_CARS,
 leadCar = Car following roadDirection from c2 for D_BTW_CARS,
     with behavior LeadingCarBehavior(LEAD_CAR_SPEED)
 
-require always (distance from ego.position to c3.position) > 4.5
-terminate when leadCar.lane == None
+require always (distance from ego.position to c3.position) >= 5
+terminate when ego.lane == None
