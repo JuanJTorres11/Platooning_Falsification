@@ -38,7 +38,7 @@ def announce(message):
 iteration = 1
 
 def create_distances_csv(d1, d2, d3, p1, p2, p3, p4):
-    distances = {"c1_c2": [], "c2_c0": [], "c0_c3": []}
+    distances = {"c1_c2": [], "c2_c0": [], "c0_c3": [], "p1": [],  "p2": [],  "p3": [],  "p4": []}
     global iteration
     for i in d1:
         distances['c1_c2'].append(i[0])
