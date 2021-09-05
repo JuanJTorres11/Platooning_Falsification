@@ -37,15 +37,23 @@ def announce(message):
 
 iteration = 1
 
-def create_distances_csv(d1, d2, d3):
-    distances = {"c1_c2": [], "c2_c0": [], "c0_c3": []}
+def create_distances_csv(d1, d2, d3, p1, p2, p3, p4):
+    distances = {"c1_c2": [], "c2_c3": [], "c3_c0": [], "p1": [],  "p2": [],  "p3": [],  "p4": []}
     global iteration
     for i in d1:
         distances['c1_c2'].append(i[0])
     for j in d2:
-        distances['c2_c0'].append(j[0])
+        distances['c2_c3'].append(j[0])
     for k in d3:
-        distances['c0_c3'].append(k[0])
+        distances['c3_c0'].append(k[0])
+    for m in p1:
+        distances['p1'].append(m[0])
+    for n in p2:
+        distances['p2'].append(n[0])
+    for x in p3:
+        distances['p3'].append(x[0])
+    for y in p4:
+        distances['p4'].append(y[0])
     df = pd.DataFrame.from_dict(distances)
     df.to_csv(f"distances{iteration}.csv")
     iteration += 1
@@ -62,17 +70,21 @@ class distance(specification_monitor):
         def specification(simulation):
             positions = np.array(simulation.result.trajectory)
 
+            p1 = positions[:, [0], :]
+            p2 = positions[:, [1], :]
+            p3 = positions[:, [2], :]
+            p4 = positions[:, [3], :]
             distances1 = positions[:, [1], :] - positions[:, 2:, :]
             distances2 = positions[:, [2], :] - positions[:, [3], :]
             distances1 = np.linalg.norm(distances1, axis=2)
             distances2 = np.linalg.norm(distances2, axis=2)
             d1 = positions[:, [1], :] - positions[:, [2], :]
             d1 = np.linalg.norm(d1, axis=2)
-            d2 = positions[:, [2], :] - positions[:, [0], :]
+            d2 = positions[:, [2], :] - positions[:, [3], :]
             d2 = np.linalg.norm(d2, axis=2)
-            d3 = positions[:, [0], :] - positions[:, [3], :]
+            d3 = positions[:, [3], :] - positions[:, [0], :]
             d3 = np.linalg.norm(d3, axis=2)
-            create_distances_csv(d1, d2, d3)
+            create_distances_csv(d1, d2, d3, p1, p2, p3, p4)
             rho1 = np.min(distances1) - 5
             rho2 = np.min(distances2) - 5
             return min(rho1, rho2)
@@ -152,11 +164,11 @@ def run_experiment(path, parallel=False, model=None,
         params['model'] = model
     sampler = ScenicSampler.fromScenario(path, **params)
     falsifier_params = DotMap(
-        n_iters=1,
+        n_iters=100,
         save_error_table=True,
         save_safe_table=True,
     )
-    server_options = DotMap(maxSteps=300, verbosity=2)
+    server_options = DotMap(maxSteps=1000, verbosity=2)
     monitor = distance()
 
     falsifier_cls = generic_parallel_falsifier if parallel else generic_falsifier
@@ -184,7 +196,7 @@ def run_experiment(path, parallel=False, model=None,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', '-p', type=str, default='platv1a.scenic',
+    parser.add_argument('--path', '-p', type=str, default='platoon.scenic',
                         help='Path to Scenic script')
     parser.add_argument('--parallel', action='store_true')
     parser.add_argument('--num-workers', type=int, default=5,

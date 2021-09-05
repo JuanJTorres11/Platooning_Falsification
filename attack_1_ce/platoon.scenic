@@ -37,7 +37,7 @@ behavior EgoBehavior(speed=10):
 
 	try:
 		do FollowLaneBehavior(speed) for globalParameters.TIME_NORMAL_BEHAVIOR
-		do BrakeBehavior() for globalParameters.TIME_BREAK_BEHAVIOR
+		do BrakeBehavior() for globalParameters.TIME_BRAKE_BEHAVIOR
 		do FollowLaneBehavior(speed)
 
 	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):

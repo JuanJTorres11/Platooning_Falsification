@@ -30,13 +30,16 @@ BRAKING_THRESHOLD = 6
 #COLLISION AVOIDANCE BEHAVIOR
 behavior CollisionAvoidance():
 	take SetBrakeAction(BRAKE_ACTION)
+#BRAKE BEHAVIOR
+behavior BrakeBehavior():
+	take SetBrakeAction(globalParameters.BRAKE_INTENSITY)	
 
 #EGO BEHAVIOR: Follow lane, and brake after passing a threshold distance to the leading car
 behavior EgoBehavior(speed=10):
 
 	try:
 		do FollowLaneBehavior(speed) for globalParameters.TIME_NORMAL_BEHAVIOR
-		do BrakeBehavior() for globalParameters.TIME_BREAK_BEHAVIOR
+		do BrakeBehavior() for globalParameters.TIME_BRAKE_BEHAVIOR
 		do FollowLaneBehavior(speed)
 
 	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):

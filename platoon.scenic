@@ -1,5 +1,5 @@
 #SET MAP AND MODEL (i.e. definitions of all referenceable vehicle types, road library, etc)
-param map  = localPath('./../singlelaneroad.xodr')
+param map  = localPath('./singlelaneroad.xodr')
 param lgsvl_map = 'SingleLaneRoad'
 param time_step = 1.0/10
 model scenic.simulators.lgsvl.model
@@ -8,7 +8,8 @@ param verifaiSamplerType = 'bo'
 
 # Parameters of the scenario.
 param BRAKE_INTENSITY = VerifaiRange(0, 1)
-param TIME_DELAY = VerifaiRange(1, 40)
+param TIME_NORMAL_BEHAVIOR = VerifaiRange(5, 40)
+param TIME_BRAKE_BEHAVIOR = VerifaiRange(1, 10)
 
 #CONSTANTS
 EGO_SPEED  = 20
@@ -29,19 +30,18 @@ behavior CollisionAvoidance():
 	take SetBrakeAction(BRAKE_ACTION)
 #BRAKE BEHAVIOR
 behavior BrakeBehavior():
-	take SetBrakeAction(globalParameters.BRAKE_INTENSITY)
+	take SetBrakeAction(globalParameters.BRAKE_INTENSITY)	
 
 #EGO BEHAVIOR: Follow lane, and brake after passing a threshold distance to the leading car
 behavior EgoBehavior(speed=10):
 
 	try:
-		do FollowLaneBehavior(speed) for 4 seconds
-		do BrakeBehavior() for globalParameters.TIME_DELAY
+		do FollowLaneBehavior(speed) for globalParameters.TIME_NORMAL_BEHAVIOR
+		do BrakeBehavior() for globalParameters.TIME_BRAKE_BEHAVIOR
 		do FollowLaneBehavior(speed)
 
 	interrupt when withinDistanceToAnyObjs(self, BRAKING_THRESHOLD):
 		do CollisionAvoidance()
-	
 
 #CAR2 BEHAVIOR: Follow lane, and brake after passing a threshold distance to obstacle
 behavior Car2Behavior(speed=10):
