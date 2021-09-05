@@ -53,7 +53,7 @@ def create_distances_csv(d1, d2, d3, p1, p2, p3, p4):
     for x in p3:
         distances['p3'].append(x[0])
     for y in p4:
-        distances['p4'].append(        
+        distances['p4'].append(y[0])        
     df = pd.DataFrame.from_dict(distances)
     df.to_csv(f"distances{iteration}.csv")
     iteration += 1
