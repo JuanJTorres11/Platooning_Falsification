@@ -87,7 +87,7 @@ class distance(specification_monitor):
             create_distances_csv(d1, d2, d3, p1, p2, p3, p4)
             rho1 = np.min(distances1) - 5
             rho2 = np.min(distances2) - 5
-            return rho1+rho2
+            return rho1*rho2
             # distances = positions[:, [0], :] - positions[:,1:, :]
             # distances = np.linalg.norm(distances, axis=2)
             # rho = np.min(distances) - 5
